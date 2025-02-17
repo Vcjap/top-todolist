@@ -2,16 +2,28 @@ const create = (elements) => {
     return Object.assign(
         {},
         {title: elements.title},
-        {due_date: elements.due_date},
+        {dueDate: elements.due_date},
         {priority: elements.priority},
         {description: elements.description},
-        {notes: elements.notes}
+        {notes: elements.notes},
+        {
+            updateTitle(newTitle) {
+                this.title = newTitle;
+            },
+            updateDueDate(newDueDate) {
+                this.dueDate = newDueDate;
+            },
+            updatePriority(newPriority) {
+                this.priority = newPriority;
+            },
+            updateDescription(newDescription) {
+                this.description = newDescription;
+            },
+            updateNotes(newNotes) {
+                this.notes = newNotes;
+            }
+        },
     )
 }
 
-const edit = (todo, element, newValue) => {
-    todo[element] = newValue;
-    return todo;
-}
-
-export default {create, edit};
+export default {create};

@@ -13,8 +13,9 @@ const project = (newTitle) => {
         {title: newTitle},
         {todos: {}},
         {
+            // Use the method todos.create defined in todos.js
             addTodoToProject(newTodo) {
-                this.todos[idTodo] = newTodo;
+                this.todos[idTodo] = todos.create(newTodo);
                 idTodo += 1;
             },
             deleteTodo(todoID) {
