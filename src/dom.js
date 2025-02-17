@@ -9,6 +9,7 @@ const displayProjectsSidebar = (projects) => {
     title.textContent = "Projects";
 
     const projectList = addProjectsToSidebar(projects);    
+    projectList.classList.add("projects_list")
 
     const newProjectBtn = createNewProjectBtn(sidebar);
 
@@ -120,7 +121,7 @@ const displayTodoSummary = (todo) => {
     displayDueDate.classList.add("todo_summary_title");
 
     container.append(todoTitle, todoDueDate);
-    
+
     return container
 }
 
