@@ -42,3 +42,12 @@ body {
     gap: 50px;
     justify-content: flex-start;
 }
+
+.todo_summary {
+    border-top: 2px solid gray;
+    padding: 10px 0px;
+}
+
+.todo_summary .duedate {
+    font-size: 0.8rem;
+}

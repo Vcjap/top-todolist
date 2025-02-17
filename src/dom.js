@@ -92,7 +92,7 @@ const displayProjectHeader = (projectTitle) => {
 
 const displayProjectTodos = (project) => {
     const container = document.createElement("div");
-    container.classList.add("project_todos");
+    container.classList.add("todo_summary");
     const todo_list = project.todos;
     
     for (let todo_id in todo_list) {
@@ -107,20 +107,19 @@ const displayProjectTodos = (project) => {
 
 const displayTodoSummary = (todo) => {
     const container = document.createElement("div");
-    container.classList.add("todo_summary");
 
     const todoTitle = extractElementTitle(todo);
     const todoDueDate = extractElementDueDate(todo);
 
-    const displayTitle = document.createElement("p");
-    displayTitle.textContent = todoTitle;
-    displayTitle.classList.add("todo_summary_title");
-
-    const displayDueDate = document.createElement("p");
+    const displayDueDate = document.createElement("div");
     displayDueDate.textContent = todoDueDate;
-    displayDueDate.classList.add("todo_summary_title");
+    displayDueDate.classList.add("duedate");
 
-    container.append(todoTitle, todoDueDate);
+    const displayTitle = document.createElement("div");
+    displayTitle.textContent = todoTitle;
+    displayTitle.classList.add("title");
+
+    container.append(displayDueDate, displayTitle);
 
     return container
 }
