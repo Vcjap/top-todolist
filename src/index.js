@@ -1,6 +1,7 @@
 import "./styles.css";
 import todos from "./todos.js";
 import projects from "./projects.js";
+import dom from "./dom.js";
 
 console.log("Hello World!");
 const todoExample = {
@@ -9,6 +10,7 @@ const todoExample = {
     priority: "High",
     description: "Fai sti piatti che altrimenti rimangono per sempre nel lavello",
     notes: "Se non lo faccio vengo sfrattato",
+    completed: false,
 }
 
 let newWorkspace = projects.workspace("Jerry");
@@ -32,3 +34,5 @@ console.log(newWorkspace);
 
 newWorkspace.projects["0"].todos["0"].updateTitle("Lava piatti in lavatric");
 console.log(newWorkspace.projects["0"].todos["0"]);
+
+dom.createProjectsSidebar();

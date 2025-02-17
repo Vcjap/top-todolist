@@ -6,6 +6,7 @@ const create = (elements) => {
         {priority: elements.priority},
         {description: elements.description},
         {notes: elements.notes},
+        {completed: elements.completed},
         {
             updateTitle(newTitle) {
                 this.title = newTitle;
@@ -21,6 +22,9 @@ const create = (elements) => {
             },
             updateNotes(newNotes) {
                 this.notes = newNotes;
+            },
+            updateCompleted(newCompleted) {
+                this.completed = newCompleted;
             }
         },
     )
