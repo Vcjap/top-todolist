@@ -77,6 +77,7 @@ const displayProjectView = (project) => {
 
      projectView.append(projectHeader, projectTodos);
      body.append(projectView);
+
 }
 
 const displayProjectHeader = (projectTitle) => {
@@ -102,6 +103,10 @@ const displayProjectTodos = (project) => {
 
         container.appendChild(newTodo);
     }
+
+    const newTodoBtn = createNewTodoBtn();
+    container.appendChild(newTodoBtn);
+    
     return container
 }
 
@@ -122,6 +127,12 @@ const displayTodoSummary = (todo) => {
     container.append(displayDueDate, displayTitle);
 
     return container
+}
+
+const createNewTodoBtn = () => {
+    const newBtn = document.createElement("button");
+    newBtn.textContent = "New Todo";
+    return newBtn
 }
 
 export default {displayProjectsSidebar, displayProjectView};
