@@ -43,7 +43,7 @@ body {
     justify-content: flex-start;
 }
 
-.todo_summary {
+.project_todo {
     border-top: 2px solid gray;
     padding: 10px 0px;
 }
