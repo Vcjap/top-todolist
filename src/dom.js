@@ -6,8 +6,7 @@ const createProjectsSidebar = (projects) => {
     const title = document.createElement("h3");
     title.textContent = "Projects";
 
-    const projectList = document.createElement("div");
-    // addProjectsToSidebar(projects)
+    const projectList = addProjectsToSidebar(projects);    
 
     const newProjectBtn = createNewProjectBtn(sidebar);
 
@@ -15,14 +14,27 @@ const createProjectsSidebar = (projects) => {
     body.append(sidebar);
 };
 
+const extractProjectName = (projects, key) => {
+    return projects[key].title;
+}
+
+const extractProjectID = (projects, key) => {
+    return projects[key].id;
+}
+
 const addProjectsToSidebar = (projects) => {
     const projectList = document.createElement("div");
-    projects.array.forEach(project => {
+
+    for (let key in projects) {
         const btn = document.createElement("button");
-        btn.textContent = projects.title;
         btn.classList.add("project");
+
+        btn.textContent = extractProjectName(projects, key);
+        btn.project_id = extractProjectID(projects, key);
+
         projectList.append(btn);
-    });
+    }
+
     return projectList;
 };
 
