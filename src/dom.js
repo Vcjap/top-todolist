@@ -157,4 +157,29 @@ const displayWorkspace = (workspace) => {
 
 }
 
+//Display the form to create a new todo
+
+const displayToDoForm = (todoTemplate) => {
+    const newForm = document.createElement("form");
+    newForm.classList.add("newToDoForm");
+
+    const formTitle = document.createElement("h2");
+    formTitle.textContent = "New todo"
+
+    // Per ora va bene per creare lo schema, ma devo assegnare le particolarità,
+    // come il type.
+    for (key in todoTemplate) {
+        const newOption = document.createElement("div");
+        newOption.classList.add("formOption");
+
+        const newLabel = document.createElement("label");
+        newLabel.setAttribute("for", `${key}`);
+
+        const newInput = document.createElement("input");
+        newInput.setAttribute("name", `${key}`);
+        newInput.setAttribute("id", `${key}`);
+        newInput.setAttribute("required","");
+    }
+}
+
 export default {displayWorkspace};
