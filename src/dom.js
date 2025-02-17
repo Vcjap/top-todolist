@@ -1,5 +1,3 @@
-const body = document.querySelector(".main");
-
 // Display project list in sidebar
 const displayProjectsSidebar = (projects) => {
     const sidebar = document.createElement("div");
@@ -14,7 +12,8 @@ const displayProjectsSidebar = (projects) => {
     const newProjectBtn = createNewProjectBtn(sidebar);
 
     sidebar.append(title, projectList, newProjectBtn);
-    body.append(sidebar);
+
+    return sidebar
 };
 
 const extractElementTitle = (element) => {
@@ -53,7 +52,9 @@ const addProjectsToSidebar = (projects) => {
         btn.classList.add("project");
 
         btn.textContent = extractElementTitle(projects[key]);
-        btn.project_id = extractElementID(projects[key]);
+        btn.project_id = key;
+
+        btn.addEventListener("click", () => updateProjectView(projects[btn.project_id]));
 
         projectList.append(btn);
     }
@@ -67,7 +68,16 @@ const createNewProjectBtn = () => {
     return newBtn
 }
 
+const updateProjectView = (newProject) => {
+    const body = document.querySelector(".main");
+    const oldProjectView = document.querySelector(".project_view");
+    oldProjectView.remove();
+    const newProjectView = displayProjectView(newProject);
+    body.append(newProjectView);
+}
+
 // Display project (and todos within)
+
 // const projectView = () => {
 //     return Object.assign(
 //         {},
@@ -145,8 +155,8 @@ const displayProjectView = (project) => {
      const projectTodos = displayProjectTodos(project);
 
      projectView.append(projectHeader, projectTodos);
-     body.append(projectView);
 
+     return projectView
 }
 
 const displayProjectHeader = (projectTitle) => {
@@ -204,10 +214,16 @@ const createNewTodoBtn = () => {
     return newBtn
 }
 
-const updateProjectView = (newProject) => {
-    const oldProjectView = document.querySelector(".project_view");
-    oldProjectView.removeChild(oldProjectView);
-    displayProjectView(newProject);
+// Unite the two elements
+const displayWorkspace = (workspace) => {
+    const body = document.querySelector(".main");
+
+    const sidebar = displayProjectsSidebar(workspace.projects);
+    const projectView = displayProjectView(workspace.projects["0"]);
+    
+    body.append(sidebar);
+    body.append(projectView);
+
 }
 
-export default {displayProjectView, displayProjectsSidebar};
+export default {displayWorkspace};
