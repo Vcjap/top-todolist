@@ -1,10 +1,11 @@
 import todos from "./todos.js";
 
-const create = (newTitle) => {
+const project = (newTitle, projectId) => {
     return Object.assign(
         {},
         {title: newTitle},
         {todos: {}},
+        {id: projectId},
         {
             getTodoID(todo) {
                 return todo.id;
@@ -16,5 +17,21 @@ const create = (newTitle) => {
     );
 }
 
-export default {create};
+const workspace = (newTitle) => {
+    return Object.assign(
+        {},
+        {title: newTitle},
+        {projects: {}},
+        {
+            getProjectID(project) {
+                return project.id; 
+            },
+            addProject(newProject) {
+                this.projects[this.getProjectID(newProject)] = newProject;
+            },
+        },
+    )
+}
+
+export default {project, workspace};
 

@@ -12,7 +12,14 @@ const todoExample = {
     id: "2"
 }
 
-let newProject = projects.create("Casa");
-console.log(newProject);
+let newWorkspace = projects.workspace("Jerry");
+console.log("Hi! This is the workspace: ");
+console.log(newWorkspace);
+let newProject = projects.project("Casa", "1");
+console.log("This is the new project: ");
+console.log(newProject)
 newProject.addTodoToProject(todoExample);
-console.log(newProject);
+newWorkspace.addProject(newProject);
+
+console.log("This is the workspace with the new project and todo: ");
+console.log(newWorkspace);
