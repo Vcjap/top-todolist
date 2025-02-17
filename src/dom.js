@@ -16,23 +16,23 @@ const displayProjectsSidebar = (projects) => {
     body.append(sidebar);
 };
 
-const extractProjectTitle = (project) => {
-    return project.title;
+const extractElementTitle = (element) => {
+    return element.title;
 }
 
-const extractProjectID = (project) => {
-    return project.id;
+const extractElementID = (element) => {
+    return element.id;
 }
 
 const addProjectsToSidebar = (projects) => {
-    const projectList = document.createElement("div");
+    const projectList = document.createElement("div"); //Also create the  container
 
     for (let key in projects) {
         const btn = document.createElement("button");
         btn.classList.add("project");
 
-        btn.textContent = extractProjectTitle(projects[key]);
-        btn.project_id = extractProjectID(projects[key]);
+        btn.textContent = extractElementTitle(projects[key]);
+        btn.project_id = extractElementID(projects[key]);
 
         projectList.append(btn);
     }
@@ -71,10 +71,19 @@ const displayProjectHeader = (projectTitle) => {
 
 const displayProjectTodos = (project) => {
     container = document.createElement("div");
+    container.classList.add("project_todos");
+    
+    for (let todo in project) {
+        const newTodo = displayTodoSummary(todo);
+        newTodo.classList.add("project_todo");
+        newTodo.todo_id = extractElementID(todo);
 
+        container.appendChild(newTodo);
+    }
+    return container
 }
 
-const displayTodo = (todo) => {
+const displayTodoSummary = (todo) => {
 
 }
 
