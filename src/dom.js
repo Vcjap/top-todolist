@@ -24,6 +24,26 @@ const extractElementID = (element) => {
     return element.id;
 }
 
+const extractElementDueDate = (element) => {
+    return element.dueDate;
+}
+
+const extractElementPriority = (element) => {
+    return element.priority;
+}
+
+const extractElementDescription = (element) => {
+    return element.description;
+}
+
+const extractElementNotes = (element) => {
+    return element.notes;
+}
+
+const extractElementCompleted = (element) => {
+    return element.completed;
+}
+
 const addProjectsToSidebar = (projects) => {
     const projectList = document.createElement("div"); //Also create the  container
 
@@ -62,21 +82,22 @@ const displayProjectHeader = (projectTitle) => {
     const container = document.createElement("div");
     container.classList.add("project_header");
 
-    const projectTitle = document.createElement("h2");
-    projectTitle.textContent = projectTitle;
+    const displayTitle = document.createElement("h2");
+    displayTitle.textContent = projectTitle;
 
-    container.append(projectTitle);
+    container.append(displayTitle);
     return container
 }
 
 const displayProjectTodos = (project) => {
-    container = document.createElement("div");
+    const container = document.createElement("div");
     container.classList.add("project_todos");
+    const todo_list = project.todos;
     
-    for (let todo in project) {
-        const newTodo = displayTodoSummary(todo);
+    for (let todo_id in todo_list) {
+        const newTodo = displayTodoSummary(todo_list[todo_id]);
         newTodo.classList.add("project_todo");
-        newTodo.todo_id = extractElementID(todo);
+        newTodo.todo_id = extractElementID(todo_list[todo_id]);
 
         container.appendChild(newTodo);
     }
@@ -84,7 +105,23 @@ const displayProjectTodos = (project) => {
 }
 
 const displayTodoSummary = (todo) => {
+    const container = document.createElement("div");
+    container.classList.add("todo_summary");
 
+    const todoTitle = extractElementTitle(todo);
+    const todoDueDate = extractElementDueDate(todo);
+
+    const displayTitle = document.createElement("p");
+    displayTitle.textContent = todoTitle;
+    displayTitle.classList.add("todo_summary_title");
+
+    const displayDueDate = document.createElement("p");
+    displayDueDate.textContent = todoDueDate;
+    displayDueDate.classList.add("todo_summary_title");
+
+    container.append(todoTitle, todoDueDate);
+    
+    return container
 }
 
 export default {displayProjectsSidebar, displayProjectView};
