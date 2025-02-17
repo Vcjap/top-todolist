@@ -9,17 +9,18 @@ const todoExample = {
     priority: "High",
     description: "Fai sti piatti che altrimenti rimangono per sempre nel lavello",
     notes: "Se non lo faccio vengo sfrattato",
-    id: "2"
 }
 
 let newWorkspace = projects.workspace("Jerry");
 console.log("Hi! This is the workspace: ");
 console.log(newWorkspace);
-let newProject = projects.project("Casa", "1");
+let newProject = projects.project("Casa");
 console.log("This is the new project: ");
 console.log(newProject)
 newProject.addTodoToProject(todoExample);
 newWorkspace.addProject(newProject);
+
+newWorkspace.addProject(projects.project("Lavoro"));
 
 console.log("This is the workspace with the new project and todo: ");
 console.log(newWorkspace);

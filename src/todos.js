@@ -10,7 +10,7 @@ const create = (elements) => {
 }
 
 const edit = (todo, element, newValue) => {
-    todo[`${element}`] = newValue;
+    todo[element] = newValue;
     return todo;
 }
 

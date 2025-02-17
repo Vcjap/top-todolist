@@ -1,18 +1,21 @@
 import todos from "./todos.js";
 
+let idProject = 0;
+
 const getID = (element) => {
     return element.id;
 }
 
-const project = (newTitle, projectId) => {
+const project = (newTitle) => {
+    let idTodo = 0;
     return Object.assign(
         {},
         {title: newTitle},
         {todos: {}},
-        {id: projectId},
         {
             addTodoToProject(newTodo) {
-                this.todos[getID(newTodo)] = newTodo;
+                this.todos[idTodo] = newTodo;
+                idTodo += 1;
             },
             deleteTodo(todoToDelete) {
                 delete this.todos[getID(todoToDelete)];
@@ -23,13 +26,15 @@ const project = (newTitle, projectId) => {
 }
 
 const workspace = (newTitle) => {
+    let idProject = 0;
     return Object.assign(
         {},
         {title: newTitle},
         {projects: {}},
         {
             addProject(newProject) {
-                this.projects[getID(newProject)] = newProject;
+                this.projects[idProject] = newProject;
+                idProject += 1;
             },
             deleteProject(projectToDelete) {
                 delete this.projects[getID(projectToDelete)];
