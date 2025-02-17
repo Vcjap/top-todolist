@@ -17,8 +17,8 @@ const project = (newTitle) => {
                 this.todos[idTodo] = newTodo;
                 idTodo += 1;
             },
-            deleteTodo(todoToDelete) {
-                delete this.todos[getID(todoToDelete)];
+            deleteTodo(todoID) {
+                delete this.todos[todoID];
             }
         },
         getID,
@@ -36,8 +36,8 @@ const workspace = (newTitle) => {
                 this.projects[idProject] = newProject;
                 idProject += 1;
             },
-            deleteProject(projectToDelete) {
-                delete this.projects[getID(projectToDelete)];
+            deleteProject(projectID) {
+                delete this.projects[projectID];
             }
         },
         getID,

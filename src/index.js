@@ -14,21 +14,22 @@ const todoExample = {
 let newWorkspace = projects.workspace("Jerry");
 console.log("Hi! This is the workspace: ");
 console.log(newWorkspace);
+
 let newProject = projects.project("Casa");
 console.log("This is the new project: ");
 console.log(newProject)
+
 newProject.addTodoToProject(todoExample);
 newWorkspace.addProject(newProject);
-
 newWorkspace.addProject(projects.project("Lavoro"));
 
 console.log("This is the workspace with the new project and todo: ");
 console.log(newWorkspace);
 
-newProject.deleteTodo(todoExample);
+newProject.deleteTodo(todoExample.id);
 console.log("This is the project after the todo was deleted");
 console.log(newProject);
 
-newWorkspace.deleteProject(newProject);
+newWorkspace.deleteProject(0);
 console.log("This is the workspace after the project was deleted");
 console.log(newWorkspace);
