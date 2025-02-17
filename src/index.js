@@ -30,13 +30,9 @@ const todoExample3 = {
 }
 
 let newWorkspace = projects.workspace("Jerry");
-// console.log("Hi! This is the workspace: ");
-// console.log(newWorkspace);
 
 let newProject1 = projects.project("Casa");
 let newProject2 = projects.project("Lavoro");
-// console.log("This is the new project: ");
-// console.log(newProject)
 
 newProject1.addTodoToProject(todoExample1);
 newProject1.addTodoToProject(todoExample2);
@@ -44,16 +40,4 @@ newProject2.addTodoToProject(todoExample3);
 newWorkspace.addProject(newProject1);
 newWorkspace.addProject(newProject2);
 
-// console.log("This is the workspace with the new project and todo: ");
-// console.log(newWorkspace);
-
-// newWorkspace.deleteProject(0);
-// console.log("This is the workspace after the project was deleted");
-// console.log(newWorkspace);
-
-// newWorkspace.projects["0"].todos["0"].updateTitle("Lava piatti in lavatric");
-// console.log(newWorkspace.projects["0"].todos["0"]);
-
-// dom.displayProjectsSidebar(newWorkspace.projects);
-// dom.displayProjectView(newWorkspace.projects["0"]);
 dom.displayWorkspace(newWorkspace);
