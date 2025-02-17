@@ -1,5 +1,9 @@
 import todos from "./todos.js";
 
+const getID = (element) => {
+    return element.id;
+}
+
 const project = (newTitle, projectId) => {
     return Object.assign(
         {},
@@ -7,13 +11,14 @@ const project = (newTitle, projectId) => {
         {todos: {}},
         {id: projectId},
         {
-            getTodoID(todo) {
-                return todo.id;
-            },
             addTodoToProject(newTodo) {
-                this.todos[this.getTodoID(newTodo)] = newTodo;
+                this.todos[getID(newTodo)] = newTodo;
+            },
+            deleteTodo(todoToDelete) {
+                delete this.todos[getID(todoToDelete)];
             }
         },
+        getID,
     );
 }
 
@@ -23,13 +28,14 @@ const workspace = (newTitle) => {
         {title: newTitle},
         {projects: {}},
         {
-            getProjectID(project) {
-                return project.id; 
-            },
             addProject(newProject) {
-                this.projects[this.getProjectID(newProject)] = newProject;
+                this.projects[getID(newProject)] = newProject;
             },
+            deleteProject(projectToDelete) {
+                delete this.projects[getID(projectToDelete)];
+            }
         },
+        getID,
     )
 }
 
