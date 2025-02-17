@@ -35,4 +35,4 @@ console.log(newWorkspace);
 newWorkspace.projects["0"].todos["0"].updateTitle("Lava piatti in lavatric");
 console.log(newWorkspace.projects["0"].todos["0"]);
 
-dom.createProjectsSidebar(newWorkspace.projects);
+dom.displayProjectsSidebar(newWorkspace.projects);

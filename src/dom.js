@@ -1,8 +1,10 @@
-const createProjectsSidebar = (projects) => {
-    const body = document.querySelector(".main");
-    
+const body = document.querySelector(".main");
+
+// Display project list in sidebar
+const displayProjectsSidebar = (projects) => {
     const sidebar = document.createElement("div");
-    
+    sidebar.classList.add("sidebar");
+
     const title = document.createElement("h3");
     title.textContent = "Projects";
 
@@ -14,12 +16,12 @@ const createProjectsSidebar = (projects) => {
     body.append(sidebar);
 };
 
-const extractProjectName = (projects, key) => {
-    return projects[key].title;
+const extractProjectTitle = (project) => {
+    return project.title;
 }
 
-const extractProjectID = (projects, key) => {
-    return projects[key].id;
+const extractProjectID = (project) => {
+    return project.id;
 }
 
 const addProjectsToSidebar = (projects) => {
@@ -29,8 +31,8 @@ const addProjectsToSidebar = (projects) => {
         const btn = document.createElement("button");
         btn.classList.add("project");
 
-        btn.textContent = extractProjectName(projects, key);
-        btn.project_id = extractProjectID(projects, key);
+        btn.textContent = extractProjectTitle(projects[key]);
+        btn.project_id = extractProjectID(projects[key]);
 
         projectList.append(btn);
     }
@@ -44,4 +46,36 @@ const createNewProjectBtn = () => {
     return newBtn
 }
 
-export default {createProjectsSidebar};
+// Display project (and todos within)
+const displayProjectView = (project) => {
+     const projectView = document.createElement("div");
+     projectView.classList.add("project_view");
+
+     const projectHeader = displayProjectHeader(project.title);
+     const projectTodos = displayProjectTodos(project);
+
+     projectView.append(projectHeader, projectTodos);
+     body.append(projectView);
+}
+
+const displayProjectHeader = (projectTitle) => {
+    const container = document.createElement("div");
+    container.classList.add("project_header");
+
+    const projectTitle = document.createElement("h2");
+    projectTitle.textContent = projectTitle;
+
+    container.append(projectTitle);
+    return container
+}
+
+const displayProjectTodos = (project) => {
+    container = document.createElement("div");
+
+}
+
+const displayTodo = (todo) => {
+
+}
+
+export default {displayProjectsSidebar, displayProjectView};
