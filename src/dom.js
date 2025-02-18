@@ -1,3 +1,6 @@
+import projects from "./projects.js";
+import todos from "./todos.js";
+
 // Display project list in sidebar
 const displayProjectsSidebar = (projects) => {
     const sidebar = document.createElement("div");
@@ -110,11 +113,12 @@ const displayProjectTodos = (project) => {
         const newTodo = displayTodoSummary(todo_list[todo_id]);
         newTodo.classList.add("project_todo");
         newTodo.todo_id = extractElementID(todo_list[todo_id]);
+        newTodo.project_id = extractElementID(project);
 
         container.appendChild(newTodo);
     }
 
-    const newTodoBtn = createNewTodoBtn();
+    const newTodoBtn = createNewTodoBtn(project);
     container.appendChild(newTodoBtn);
 
     return container
@@ -139,11 +143,11 @@ const displayTodoSummary = (todo) => {
     return container
 }
 
-const createNewTodoBtn = () => {
+const createNewTodoBtn = (project) => {
     const newBtn = document.createElement("button");
     newBtn.textContent = "New Todo";
-
-    newBtn.addEventListener("click", () => openNewToDoDialog());
+    
+    newBtn.addEventListener("click", () => openNewToDoDialog(project));
 
     return newBtn
 }
@@ -151,9 +155,9 @@ const createNewTodoBtn = () => {
 // Unite the two elements
 const displayWorkspace = (workspace) => {
     const body = document.querySelector(".main");
-
-    const sidebar = displayProjectsSidebar(workspace.projects);
-    const projectView = displayProjectView(workspace.projects["0"]);
+    let projects = workspace.projects;
+    const sidebar = displayProjectsSidebar(projects);
+    const projectView = displayProjectView(projects["0"]);
     
     body.append(sidebar);
     body.append(projectView);
@@ -165,7 +169,7 @@ const displayWorkspace = (workspace) => {
 
 //Display the form to create a new todo
 
-const createToDoFormFromTemplate = () => {
+const createToDoFormFromTemplate = (project) => {
     const toDoTemplate = {
         title: {
             type: "text"
@@ -187,11 +191,11 @@ const createToDoFormFromTemplate = () => {
         }
     }
 
-    const newForm = createToDoForm(toDoTemplate);
+    const newForm = createToDoForm(toDoTemplate, project);
     return newForm;
 }
 
-const createToDoForm = (toDoTemplate) => {
+const createToDoForm = (toDoTemplate, project) => {
     // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
@@ -205,9 +209,10 @@ const createToDoForm = (toDoTemplate) => {
     const dialogCloseBtn = createDialogCloseBtn();
 
     formHeader.append(formTitle, dialogCloseBtn);
-    newForm.append(formHeader);
 
     // Create properties
+    const formProperties = document.createElement("div");
+    formProperties.classList.add("formProperties");
     for (const toDoProperty in toDoTemplate) {
         const newOption = document.createElement("div");
         newOption.classList.add("formOption");
@@ -223,18 +228,19 @@ const createToDoForm = (toDoTemplate) => {
         newInput.setAttribute("type", toDoTemplate[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
         
         newOption.append(newLabel, newInput);
-        newForm.append(newOption);
+        formProperties.append(newOption);
     }
 
-    const formNewToDoBtn = createFormNewToDoBtn()
-    newForm.append(formNewToDoBtn);
+    const formNewToDoBtn = createFormNewToDoBtn(toDoTemplate, project);
+
+    newForm.append(formHeader, formProperties, formNewToDoBtn);
 
     return newForm
 }
 
-const openNewToDoDialog = () => {
+const openNewToDoDialog = (project) => {
     const newDialog = document.createElement("dialog");
-    newDialog.append(createToDoFormFromTemplate());
+    newDialog.append(createToDoFormFromTemplate(project));
 
     const body = document.querySelector(".main");
     body.append(newDialog);
@@ -248,16 +254,19 @@ const createDialogCloseBtn = () => {
     closeBtn.classList.add("dialogCloseBtn");
 
     closeBtn.addEventListener("click", (event) => {
-        const dialog = document.querySelector("dialog");
         event.preventDefault(); // Needed to prevent form to try and send something
-        dialog.close();
-        dialog.remove(); //If the dialog is not removed, the website will keep using the old one
+        closeDialog(); //If the dialog is not removed, the website will keep using the old one
     })
 
     return closeBtn
 }
 
-const createFormNewToDoBtn = () => {
+const closeDialog = () => {
+    const dialog = document.querySelector("dialog");
+    dialog.remove();
+}
+
+const createFormNewToDoBtn = (toDoTemplate, project) => {
     const formNewToDoBtn = document.createElement("button");
     formNewToDoBtn.textContent = "Create todo";
     formNewToDoBtn.classList.add("formNewToDoBtn");
@@ -265,9 +274,24 @@ const createFormNewToDoBtn = () => {
     formNewToDoBtn.addEventListener("click", (event) => {
         console.log("Create new todo");
         event.preventDefault();
+        const newToDo = getNewToDo(toDoTemplate);
+        project.addTodoToProject(newToDo);
+        closeDialog();
+        updateProjectView(project);
     });
 
     return formNewToDoBtn
+}
+
+const getNewToDo = (toDoTemplate) => {
+    let newToDo = {};
+    // Based on the todotemplate (that we used to create the form), we get the values from the form
+    // and use them to populate the new todo
+    for (const property in toDoTemplate) {
+        newToDo[property] = document.querySelector(`.formOption #${property}`).value
+    }
+
+    return newToDo
 }
 
 export default {displayWorkspace};
