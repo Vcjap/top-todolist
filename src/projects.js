@@ -2,10 +2,6 @@ import todos from "./todos.js";
 
 let idProject = 0;
 
-const getID = (element) => {
-    return element.id;
-}
-
 const project = (newTitle) => {
     let idTodo = 0;
     return Object.assign(
@@ -14,15 +10,14 @@ const project = (newTitle) => {
         {todos: {}},
         {
             // Use the method todos.create defined in todos.js
-            addTodoToProject(newTodo) {
+            addChild(newTodo) {
                 this.todos[idTodo] = todos.create(newTodo);
                 idTodo += 1;
             },
-            deleteTodo(todoID) {
+            deleteChild(todoID) {
                 delete this.todos[todoID];
             }
         },
-        getID,
     );
 }
 
@@ -33,15 +28,14 @@ const workspace = (newTitle) => {
         {title: newTitle},
         {projects: {}},
         {
-            addProject(newProject) {
+            addChild(newProject) {
                 this.projects[idProject] = newProject;
                 idProject += 1;
             },
-            deleteProject(projectID) {
+            deleteChild(projectID) {
                 delete this.projects[projectID];
             }
         },
-        getID,
     )
 }
 

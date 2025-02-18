@@ -34,10 +34,10 @@ let newWorkspace = projects.workspace("Jerry");
 let newProject1 = projects.project("Casa");
 let newProject2 = projects.project("Lavoro");
 
-newProject1.addTodoToProject(todoExample1);
-newProject1.addTodoToProject(todoExample2);
-newProject2.addTodoToProject(todoExample3);
-newWorkspace.addProject(newProject1);
-newWorkspace.addProject(newProject2);
+newProject1.addChild(todoExample1);
+newProject1.addChild(todoExample2);
+newProject2.addChild(todoExample3);
+newWorkspace.addChild(newProject1);
+newWorkspace.addChild(newProject2);
 
 dom.displayWorkspace(newWorkspace);

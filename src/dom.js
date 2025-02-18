@@ -84,12 +84,39 @@ const displayProjectTodos = (project) => {
         newTodo.todo_id = todo_id;
         newTodo.project_id = project.id;
 
-        const deleteToDoBtn = createDeleteToDoBtn(project, todo_id); // To refactor into a more abstract "delete" function
+        const deleteToDoBtn = document.createElement("button");
+        deleteToDoBtn.textContent = "Delete Todo";
+        deleteToDoBtn.addEventListener("click", () => {
+            project.deleteChild(todo_id);
+            updateProjectView(project);
+        });
+
         newTodo.append(deleteToDoBtn);
         container.appendChild(newTodo);
     }
 
-    const newTodoBtn = createNewTodoBtn(project); // To refactor into a "create" button
+    const template = {
+        title: {
+            type: "text"
+        },
+        due_date: {
+            type: "date"
+        },
+        priority: {
+            type: "text"
+        },
+        description: {
+            type: "text"
+        },
+        notes: {
+            type: "text"
+        },
+        completed: {
+            type: "boolean"
+        }
+    };
+
+    const newTodoBtn = createNewElementBtn(project, template, "New Todo"); 
     container.appendChild(newTodoBtn);
 
     return container
@@ -114,48 +141,14 @@ const displayTodoSummary = (todo) => {
     return container
 }
 
-const createNewTodoBtn = (project) => {
+const createNewElementBtn = (project, template, textContent) => {
     const newBtn = document.createElement("button");
-    newBtn.textContent = "New Todo";
-
-    const template = {
-        title: {
-            type: "text"
-        },
-        due_date: {
-            type: "date"
-        },
-        priority: {
-            type: "text"
-        },
-        description: {
-            type: "text"
-        },
-        notes: {
-            type: "text"
-        },
-        completed: {
-            type: "boolean"
-        }
-    };
+    newBtn.textContent = textContent;
 
     const dialog = document.createElement("dialog");
     newBtn.addEventListener("click", () => openDialog(project, template, dialog));
 
     return newBtn
-}
-
-const createDeleteToDoBtn = (project, todoID) => {
-    const deleteToDoBtn = document.createElement("button");
-    deleteToDoBtn.textContent = "Delete Todo";
-    deleteToDoBtn.classList.add("deleteToDoBtn");
-    
-    deleteToDoBtn.addEventListener("click", () => {
-        project.deleteTodo(todoID);
-        updateProjectView(project);
-    })
-
-    return deleteToDoBtn
 }
 
 // Unite the two elements
@@ -206,7 +199,7 @@ const createForm = (project, template, dialog) => {
     newForm.onsubmit = function (event) {
         event.preventDefault();
         const newToDo = getNewElement(newForm);
-        project.addTodoToProject(newToDo);
+        project.addChild(newToDo);
         removeDialog(dialog);
         updateProjectView(project);
     }
