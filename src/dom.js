@@ -142,6 +142,9 @@ const displayTodoSummary = (todo) => {
 const createNewTodoBtn = () => {
     const newBtn = document.createElement("button");
     newBtn.textContent = "New Todo";
+
+    newBtn.addEventListener("click", () => openNewTaskDialog());
+
     return newBtn
 }
 
@@ -155,31 +158,75 @@ const displayWorkspace = (workspace) => {
     body.append(sidebar);
     body.append(projectView);
 
+    // const newDialog = createNewTaskDialog();
+    // body.append(newDialog);
+    // newDialog.showModal();
 }
 
 //Display the form to create a new todo
 
-const displayToDoForm = (todoTemplate) => {
+const createToDoFormFromTemplate = () => {
+    const toDoTemplate = {
+        title: {
+            type: "text"
+        },
+        due_date: {
+            type: "date"
+        },
+        priority: {
+            type: "text"
+        },
+        description: {
+            type: "text"
+        },
+        notes: {
+            type: "text"
+        },
+        completed: {
+            type: "boolean"
+        }
+    }
+
+    const newForm = createToDoForm(toDoTemplate);
+    return newForm;
+}
+
+const createToDoForm = (toDoTemplate) => {
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
 
     const formTitle = document.createElement("h2");
     formTitle.textContent = "New todo"
 
-    // Per ora va bene per creare lo schema, ma devo assegnare le particolarità,
-    // come il type.
-    for (key in todoTemplate) {
+    for (const toDoProperty in toDoTemplate) {
         const newOption = document.createElement("div");
         newOption.classList.add("formOption");
 
         const newLabel = document.createElement("label");
-        newLabel.setAttribute("for", `${key}`);
+        newLabel.setAttribute("for", `${toDoProperty}`);
+        newLabel.textContent= `${toDoProperty}`;
 
         const newInput = document.createElement("input");
-        newInput.setAttribute("name", `${key}`);
-        newInput.setAttribute("id", `${key}`);
+        newInput.setAttribute("name", `${toDoProperty}`);
+        newInput.setAttribute("id", `${toDoProperty}`);
         newInput.setAttribute("required","");
+        newInput.setAttribute("type", toDoTemplate[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
+        
+        newOption.append(newLabel, newInput);
+        newForm.append(newOption);
     }
+
+    return newForm
+}
+
+const openNewTaskDialog = () => {
+    const newDialog = document.createElement("dialog");
+    newDialog.append(createToDoFormFromTemplate());
+
+    const body = document.querySelector(".main");
+    body.append(newDialog);
+
+    newDialog.showModal();
 }
 
 export default {displayWorkspace};
