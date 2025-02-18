@@ -143,7 +143,7 @@ const createNewTodoBtn = () => {
     const newBtn = document.createElement("button");
     newBtn.textContent = "New Todo";
 
-    newBtn.addEventListener("click", () => openNewTaskDialog());
+    newBtn.addEventListener("click", () => openNewToDoDialog());
 
     return newBtn
 }
@@ -226,10 +226,13 @@ const createToDoForm = (toDoTemplate) => {
         newForm.append(newOption);
     }
 
+    const formNewToDoBtn = createFormNewToDoBtn()
+    newForm.append(formNewToDoBtn);
+
     return newForm
 }
 
-const openNewTaskDialog = () => {
+const openNewToDoDialog = () => {
     const newDialog = document.createElement("dialog");
     newDialog.append(createToDoFormFromTemplate());
 
@@ -252,6 +255,19 @@ const createDialogCloseBtn = () => {
     })
 
     return closeBtn
+}
+
+const createFormNewToDoBtn = () => {
+    const formNewToDoBtn = document.createElement("button");
+    formNewToDoBtn.textContent = "Create todo";
+    formNewToDoBtn.classList.add("formNewToDoBtn");
+
+    formNewToDoBtn.addEventListener("click", (event) => {
+        console.log("Create new todo");
+        event.preventDefault();
+    });
+
+    return formNewToDoBtn
 }
 
 export default {displayWorkspace};
