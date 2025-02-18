@@ -16,34 +16,6 @@ const displayProjectsSidebar = (projects) => {
     return sidebar
 };
 
-const extractElementTitle = (element) => {
-    return element.title;
-}
-
-const extractElementID = (element) => {
-    return element.id;
-}
-
-const extractElementDueDate = (element) => {
-    return element.dueDate;
-}
-
-const extractElementPriority = (element) => {
-    return element.priority;
-}
-
-const extractElementDescription = (element) => {
-    return element.description;
-}
-
-const extractElementNotes = (element) => {
-    return element.notes;
-}
-
-const extractElementCompleted = (element) => {
-    return element.completed;
-}
-
 const addProjectsToSidebar = (projects) => {
     const projectList = document.createElement("div"); //Also create the  container
 
@@ -51,7 +23,7 @@ const addProjectsToSidebar = (projects) => {
         const btn = document.createElement("button");
         btn.classList.add("project");
 
-        btn.textContent = extractElementTitle(projects[key]);
+        btn.textContent = projects[key].title;
         btn.project_id = key;
 
         btn.addEventListener("click", () => updateProjectView(projects[btn.project_id]));
@@ -109,15 +81,15 @@ const displayProjectTodos = (project) => {
     for (let todo_id in todo_list) {
         const newTodo = displayTodoSummary(todo_list[todo_id]);
         newTodo.classList.add("project_todo");
-        newTodo.todo_id = extractElementID(todo_list[todo_id]);
-        newTodo.project_id = extractElementID(project);
+        newTodo.todo_id = todo_id;
+        newTodo.project_id = project.id;
 
-        const deleteToDoBtn = createDeleteToDoBtn(project, todo_id);
+        const deleteToDoBtn = createDeleteToDoBtn(project, todo_id); // To refactor into a more abstract "delete" function
         newTodo.append(deleteToDoBtn);
         container.appendChild(newTodo);
     }
 
-    const newTodoBtn = createNewTodoBtn(project);
+    const newTodoBtn = createNewTodoBtn(project); // To refactor into a "create" button
     container.appendChild(newTodoBtn);
 
     return container
@@ -126,8 +98,8 @@ const displayProjectTodos = (project) => {
 const displayTodoSummary = (todo) => {
     const container = document.createElement("div");
 
-    const todoTitle = extractElementTitle(todo);
-    const todoDueDate = extractElementDueDate(todo);
+    const todoTitle = todo.title;
+    const todoDueDate = todo.dueDate;
 
     const displayDueDate = document.createElement("div");
     displayDueDate.textContent = todoDueDate;
@@ -145,8 +117,30 @@ const displayTodoSummary = (todo) => {
 const createNewTodoBtn = (project) => {
     const newBtn = document.createElement("button");
     newBtn.textContent = "New Todo";
-    
-    newBtn.addEventListener("click", () => openNewToDoDialog(project));
+
+    const template = {
+        title: {
+            type: "text"
+        },
+        due_date: {
+            type: "date"
+        },
+        priority: {
+            type: "text"
+        },
+        description: {
+            type: "text"
+        },
+        notes: {
+            type: "text"
+        },
+        completed: {
+            type: "boolean"
+        }
+    };
+
+    const dialog = document.createElement("dialog");
+    newBtn.addEventListener("click", () => openDialog(project, template, dialog));
 
     return newBtn
 }
@@ -177,51 +171,15 @@ const displayWorkspace = (workspace) => {
 
 //Display the form to create a new todo
 
-const createToDoFormFromTemplate = (project) => {
-    const toDoTemplate = {
-        title: {
-            type: "text"
-        },
-        due_date: {
-            type: "date"
-        },
-        priority: {
-            type: "text"
-        },
-        description: {
-            type: "text"
-        },
-        notes: {
-            type: "text"
-        },
-        completed: {
-            type: "boolean"
-        }
-    }
-
-    const newForm = createToDoForm(toDoTemplate, project);
-    return newForm;
-}
-
-const createToDoForm = (toDoTemplate, project) => {
+const createForm = (project, template, dialog) => {
     // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
 
-    const formHeader = document.createElement("div");
-    formHeader.classList.add("formHeader");
-    
-    const formTitle = document.createElement("h2");
-    formTitle.textContent = "New todo"
-
-    const dialogCloseBtn = createDialogCloseBtn();
-
-    formHeader.append(formTitle, dialogCloseBtn);
-
     // Create properties
     const formProperties = document.createElement("div");
     formProperties.classList.add("formProperties");
-    for (const toDoProperty in toDoTemplate) {
+    for (const toDoProperty in template) {
         const newOption = document.createElement("div");
         newOption.classList.add("formOption");
 
@@ -233,73 +191,59 @@ const createToDoForm = (toDoTemplate, project) => {
         newInput.setAttribute("name", `${toDoProperty}`);
         newInput.setAttribute("id", `${toDoProperty}`);
         newInput.setAttribute("required","");
-        newInput.setAttribute("type", toDoTemplate[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
+        newInput.setAttribute("type", template[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
         
         newOption.append(newLabel, newInput);
         formProperties.append(newOption);
     }
 
-    const formNewToDoBtn = createFormNewToDoBtn(toDoTemplate, project);
+    const newToDoBtn = document.createElement("button");
+    newToDoBtn.textContent = "Create";    
+    
+    newForm.append(formProperties, newToDoBtn);
 
-    newForm.append(formHeader, formProperties, formNewToDoBtn);
-
+    //Decide what happens when submitting the form (create a new element and remove the dialog)
+    newForm.onsubmit = function (event) {
+        event.preventDefault();
+        const newToDo = getNewElement(newForm);
+        project.addTodoToProject(newToDo);
+        removeDialog(dialog);
+        updateProjectView(project);
+    }
     return newForm
 }
 
-const openNewToDoDialog = (project) => {
-    const newDialog = document.createElement("dialog");
-    newDialog.append(createToDoFormFromTemplate(project));
-
+const openDialog = (project, template, dialog) => {
     const body = document.querySelector(".main");
-    body.append(newDialog);
 
-    newDialog.showModal();
-}
-
-const createDialogCloseBtn = () => {
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "X";
-    closeBtn.classList.add("dialogCloseBtn");
-
-    closeBtn.addEventListener("click", (event) => {
-        event.preventDefault(); // Needed to prevent form to try and send something
-        closeDialog(); //If the dialog is not removed, the website will keep using the old one
-    })
-
-    return closeBtn
-}
-
-const closeDialog = () => {
-    const dialog = document.querySelector("dialog");
-    dialog.remove();
-}
-
-const createFormNewToDoBtn = (toDoTemplate, project) => {
-    const formNewToDoBtn = document.createElement("button");
-    formNewToDoBtn.textContent = "Create todo";
-    formNewToDoBtn.classList.add("formNewToDoBtn");
-
-    formNewToDoBtn.addEventListener("click", (event) => {
-        console.log("Create new todo");
-        event.preventDefault();
-        const newToDo = getNewToDo(toDoTemplate);
-        project.addTodoToProject(newToDo);
-        closeDialog();
-        updateProjectView(project);
+    closeBtn.addEventListener("click", () => {
+        removeDialog(dialog)
     });
+    
+    dialog.append(closeBtn);
+    dialog.append(createForm(project, template, dialog));
 
-    return formNewToDoBtn
+    body.append(dialog);
+    dialog.showModal();
 }
 
-const getNewToDo = (toDoTemplate) => {
-    let newToDo = {};
-    // Based on the todotemplate (that we used to create the form), we get the values from the form
-    // and use them to populate the new todo
-    for (const property in toDoTemplate) {
-        newToDo[property] = document.querySelector(`.formOption #${property}`).value
-    }
+const getNewElement = (form) => {
+    let newTodo = {};
+    Array.from(form.elements).forEach(element => {
+        if (element.name) {
+          newTodo[element.name] = element.value;
+        }
+      });
+    
+    return newTodo
+}
 
-    return newToDo
+const removeDialog = (dialog) => {
+    dialog.innerHTML = "";
+    dialog.close();
+    dialog.remove();
 }
 
 export default {displayWorkspace};
