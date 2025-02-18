@@ -1,23 +1,27 @@
+import projects from "./projects";
+
 // Display project list in sidebar
-const displayProjectsSidebar = (projects) => {
+const displayProjectsSidebar = (workspace) => {
     const sidebar = document.createElement("div");
     sidebar.classList.add("sidebar");
 
     const title = document.createElement("h3");
     title.textContent = "Projects";
 
-    const projectList = addProjectsToSidebar(projects);    
+    const projectList = addProjectsToSidebar(workspace);    
     projectList.classList.add("projects_list")
 
-    const newProjectBtn = createNewProjectBtn(sidebar);
+    const template = {title: {type : "text"}};
+    const newProjectBtn = createNewElementBtn(workspace, template, "New Project", workspace);
 
     sidebar.append(title, projectList, newProjectBtn);
 
     return sidebar
 };
 
-const addProjectsToSidebar = (projects) => {
+const addProjectsToSidebar = (workspace) => {
     const projectList = document.createElement("div"); //Also create the  container
+    const projects = workspace.projects;
 
     for (let key in projects) {
         const btn = document.createElement("button");
@@ -26,7 +30,7 @@ const addProjectsToSidebar = (projects) => {
         btn.textContent = projects[key].title;
         btn.project_id = key;
 
-        btn.addEventListener("click", () => updateProjectView(projects[btn.project_id]));
+        btn.addEventListener("click", () => updateProjectView(projects[btn.project_id], workspace));
 
         projectList.append(btn);
     }
@@ -34,28 +38,22 @@ const addProjectsToSidebar = (projects) => {
     return projectList;
 };
 
-const createNewProjectBtn = () => {
-    const newBtn = document.createElement("button");
-    newBtn.textContent = "New Project";
-    return newBtn
-}
-
-const updateProjectView = (newProject) => {
+const updateProjectView = (newProject, workspace) => {
     const body = document.querySelector(".main");
     const oldProjectView = document.querySelector(".project_view");
     oldProjectView.remove();
-    const newProjectView = displayProjectView(newProject);
+    const newProjectView = displayProjectView(newProject, workspace);
     body.append(newProjectView);
 }
 
 // Display project (and todos within)
 
-const displayProjectView = (project) => {
+const displayProjectView = (project, workspace) => {
      const projectView = document.createElement("div");
      projectView.classList.add("project_view");
 
      const projectHeader = displayProjectHeader(project.title);
-     const projectTodos = displayProjectTodos(project);
+     const projectTodos = displayProjectTodos(project, workspace);
 
      projectView.append(projectHeader, projectTodos);
 
@@ -73,7 +71,7 @@ const displayProjectHeader = (projectTitle) => {
     return container
 }
 
-const displayProjectTodos = (project) => {
+const displayProjectTodos = (project, workspace) => {
     const container = document.createElement("div");
     container.classList.add("todo_summary");
     const todo_list = project.todos;
@@ -116,7 +114,7 @@ const displayProjectTodos = (project) => {
         }
     };
 
-    const newTodoBtn = createNewElementBtn(project, template, "New Todo"); 
+    const newTodoBtn = createNewElementBtn(project, template, "New Todo", workspace); 
     container.appendChild(newTodoBtn);
 
     return container
@@ -141,12 +139,12 @@ const displayTodoSummary = (todo) => {
     return container
 }
 
-const createNewElementBtn = (project, template, textContent) => {
+const createNewElementBtn = (project, template, textContent, workspace) => {
     const newBtn = document.createElement("button");
     newBtn.textContent = textContent;
 
     const dialog = document.createElement("dialog");
-    newBtn.addEventListener("click", () => openDialog(project, template, dialog));
+    newBtn.addEventListener("click", () => openDialog(project, template, dialog, workspace));
 
     return newBtn
 }
@@ -154,8 +152,10 @@ const createNewElementBtn = (project, template, textContent) => {
 // Unite the two elements
 const displayWorkspace = (workspace) => {
     const body = document.querySelector(".main");
+    body.innerHTML = "";
+
     let projects = workspace.projects;
-    const sidebar = displayProjectsSidebar(projects);
+    const sidebar = displayProjectsSidebar(workspace);
     const projectView = displayProjectView(projects["0"]);
     
     body.append(sidebar);
@@ -163,8 +163,23 @@ const displayWorkspace = (workspace) => {
 }
 
 //Display the form to create a new todo
+const openDialog = (project, template, dialog, workspace) => {
+    const body = document.querySelector(".main");
 
-const createForm = (project, template, dialog) => {
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "X";
+    closeBtn.addEventListener("click", () => {
+        removeDialog(dialog)
+    });
+    
+    dialog.append(closeBtn);
+    dialog.append(createForm(project, template, dialog, workspace));
+
+    body.append(dialog);
+    dialog.showModal();
+}
+
+const createForm = (project, template, dialog, workspace) => {
     // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
@@ -196,30 +211,24 @@ const createForm = (project, template, dialog) => {
     newForm.append(formProperties, newToDoBtn);
 
     //Decide what happens when submitting the form (create a new element and remove the dialog)
-    newForm.onsubmit = function (event) {
+    newForm.onsubmit = (event) => {
         event.preventDefault();
         const newToDo = getNewElement(newForm);
+
+        // Horrible if/else to make sure that we use the right constructor for the objects todos or project
+        if (workspace === project) { // This means we've passed the workspace as parent
+            let newProject = projects.project(newToDo.title);
+            project.addChild(newProject);
+        }
+        else {
         project.addChild(newToDo);
+        }
+
         removeDialog(dialog);
-        updateProjectView(project);
+        console.log(workspace);
+        displayWorkspace(workspace);
     }
     return newForm
-}
-
-const openDialog = (project, template, dialog) => {
-    const body = document.querySelector(".main");
-
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "X";
-    closeBtn.addEventListener("click", () => {
-        removeDialog(dialog)
-    });
-    
-    dialog.append(closeBtn);
-    dialog.append(createForm(project, template, dialog));
-
-    body.append(dialog);
-    dialog.showModal();
 }
 
 const getNewElement = (form) => {
