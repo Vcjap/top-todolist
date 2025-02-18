@@ -112,6 +112,8 @@ const displayProjectTodos = (project) => {
         newTodo.todo_id = extractElementID(todo_list[todo_id]);
         newTodo.project_id = extractElementID(project);
 
+        const deleteToDoBtn = createDeleteToDoBtn(project, todo_id);
+        newTodo.append(deleteToDoBtn);
         container.appendChild(newTodo);
     }
 
@@ -147,6 +149,19 @@ const createNewTodoBtn = (project) => {
     newBtn.addEventListener("click", () => openNewToDoDialog(project));
 
     return newBtn
+}
+
+const createDeleteToDoBtn = (project, todoID) => {
+    const deleteToDoBtn = document.createElement("button");
+    deleteToDoBtn.textContent = "Delete Todo";
+    deleteToDoBtn.classList.add("deleteToDoBtn");
+    
+    deleteToDoBtn.addEventListener("click", () => {
+        project.deleteTodo(todoID);
+        updateProjectView(project);
+    })
+
+    return deleteToDoBtn
 }
 
 // Unite the two elements
