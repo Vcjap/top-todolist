@@ -192,12 +192,22 @@ const createToDoFormFromTemplate = () => {
 }
 
 const createToDoForm = (toDoTemplate) => {
+    // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
 
+    const formHeader = document.createElement("div");
+    formHeader.classList.add("formHeader");
+    
     const formTitle = document.createElement("h2");
     formTitle.textContent = "New todo"
 
+    const dialogCloseBtn = createDialogCloseBtn();
+
+    formHeader.append(formTitle, dialogCloseBtn);
+    newForm.append(formHeader);
+
+    // Create properties
     for (const toDoProperty in toDoTemplate) {
         const newOption = document.createElement("div");
         newOption.classList.add("formOption");
@@ -227,6 +237,21 @@ const openNewTaskDialog = () => {
     body.append(newDialog);
 
     newDialog.showModal();
+}
+
+const createDialogCloseBtn = () => {
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "X";
+    closeBtn.classList.add("dialogCloseBtn");
+
+    closeBtn.addEventListener("click", (event) => {
+        const dialog = document.querySelector("dialog");
+        event.preventDefault(); // Needed to prevent form to try and send something
+        dialog.close();
+        dialog.remove(); //If the dialog is not removed, the website will keep using the old one
+    })
+
+    return closeBtn
 }
 
 export default {displayWorkspace};
