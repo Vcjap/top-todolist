@@ -161,10 +161,6 @@ const displayWorkspace = (workspace) => {
     
     body.append(sidebar);
     body.append(projectView);
-
-    // const newDialog = createNewTaskDialog();
-    // body.append(newDialog);
-    // newDialog.showModal();
 }
 
 //Display the form to create a new todo
