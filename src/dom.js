@@ -1,6 +1,3 @@
-import projects from "./projects.js";
-import todos from "./todos.js";
-
 // Display project list in sidebar
 const displayProjectsSidebar = (projects) => {
     const sidebar = document.createElement("div");
