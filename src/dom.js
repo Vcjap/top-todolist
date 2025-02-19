@@ -30,21 +30,15 @@ const addProjectsToSidebar = (workspace) => {
         btn.textContent = projects[key].title;
         btn.project_id = key;
 
-        btn.addEventListener("click", () => updateProjectView(projects[btn.project_id], workspace));
+        btn.addEventListener("click", () => {
+            displayWorkspace(workspace, projects[key]);
+        })
 
         projectList.append(btn);
     }
 
     return projectList;
 };
-
-const updateProjectView = (newProject, workspace) => {
-    const body = document.querySelector(".main");
-    const oldProjectView = document.querySelector(".project_view");
-    oldProjectView.remove();
-    const newProjectView = displayProjectView(newProject, workspace);
-    body.append(newProjectView);
-}
 
 // Display project (and todos within)
 
@@ -86,7 +80,7 @@ const displayProjectTodos = (project, workspace) => {
         deleteToDoBtn.textContent = "Delete Todo";
         deleteToDoBtn.addEventListener("click", () => {
             project.deleteChild(todo_id);
-            updateProjectView(project);
+            displayWorkspace(workspace, project);
         });
 
         newTodo.append(deleteToDoBtn);
