@@ -233,6 +233,7 @@ const removeDialog = (dialog, workspace, projectToShow) => {
     dialog.innerHTML = "";
     dialog.close();
     dialog.remove();
+    if (workspace === projectToShow) {projectToShow = workspace.projects["0"]} // if we cancel the form to create a new form, we display the first project of the list
     displayWorkspace(workspace, projectToShow);
 }
 
