@@ -150,13 +150,13 @@ const createNewElementBtn = (project, template, textContent, workspace) => {
 }
 
 // Unite the two elements
-const displayWorkspace = (workspace) => {
+const displayWorkspace = (workspace, currentProject) => {
     const body = document.querySelector(".main");
     body.innerHTML = "";
 
     let projects = workspace.projects;
     const sidebar = displayProjectsSidebar(workspace);
-    const projectView = displayProjectView(projects["0"]);
+    const projectView = displayProjectView(currentProject);
     
     body.append(sidebar);
     body.append(projectView);
@@ -168,9 +168,7 @@ const openDialog = (project, template, dialog, workspace) => {
 
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "X";
-    closeBtn.addEventListener("click", () => {
-        removeDialog(dialog)
-    });
+    closeBtn.addEventListener("click", () => {removeDialog(dialog, workspace, project)});
     
     dialog.append(closeBtn);
     dialog.append(createForm(project, template, dialog, workspace));
@@ -224,9 +222,7 @@ const createForm = (project, template, dialog, workspace) => {
         project.addChild(newToDo);
         }
 
-        removeDialog(dialog);
-        console.log(workspace);
-        displayWorkspace(workspace);
+        removeDialog(dialog, workspace, project);
     }
     return newForm
 }
@@ -242,10 +238,11 @@ const getNewElement = (form) => {
     return newTodo
 }
 
-const removeDialog = (dialog) => {
+const removeDialog = (dialog, workspace, currentProject) => {
     dialog.innerHTML = "";
     dialog.close();
     dialog.remove();
+    displayWorkspace(workspace, currentProject);
 }
 
 export default {displayWorkspace};

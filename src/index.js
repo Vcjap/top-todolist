@@ -40,4 +40,4 @@ newProject2.addChild(todoExample3);
 newWorkspace.addChild(newProject1);
 newWorkspace.addChild(newProject2);
 
-dom.displayWorkspace(newWorkspace);
+dom.displayWorkspace(newWorkspace, newWorkspace.projects["0"]);
