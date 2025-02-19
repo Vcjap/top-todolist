@@ -7,26 +7,6 @@ const create = (elements) => {
         {description: elements.description},
         {notes: elements.notes},
         {completed: elements.completed},
-        {
-            updateTitle(newTitle) {
-                this.title = newTitle;
-            },
-            updateDueDate(newDueDate) {
-                this.dueDate = newDueDate;
-            },
-            updatePriority(newPriority) {
-                this.priority = newPriority;
-            },
-            updateDescription(newDescription) {
-                this.description = newDescription;
-            },
-            updateNotes(newNotes) {
-                this.notes = newNotes;
-            },
-            updateCompleted(newCompleted) {
-                this.completed = newCompleted;
-            }
-        },
     )
 }
 

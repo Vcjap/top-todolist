@@ -86,7 +86,7 @@ const displayProjectTodos = (project, workspace) => {
 
         const dialog = document.createElement("dialog");
         const template = createTemplate(todo_list[todo_id]);
-        newTodo.addEventListener("click", ()=> openDialog(project, template, dialog, workspace));
+        newTodo.addEventListener("click", ()=> openDialog(project, template, dialog, workspace, todo_id));
         
         newTodo.append(deleteToDoBtn);
         container.appendChild(newTodo);
@@ -125,7 +125,7 @@ const createTemplate = (originObject = null) => {
         completed: {
             type: "boolean",
             value: ""
-        }
+        },
     };
     
     if (!originObject) return template;
@@ -178,7 +178,7 @@ const displayWorkspace = (workspace, projectToShow) => {
 }
 
 //Display the form to create a new todo
-const openDialog = (project, template, dialog, workspace) => {
+const openDialog = (project, template, dialog, workspace, toDoID = null) => {
     const body = document.querySelector(".main");
 
     const closeBtn = document.createElement("button");
@@ -186,13 +186,13 @@ const openDialog = (project, template, dialog, workspace) => {
     closeBtn.addEventListener("click", () => {removeDialog(dialog, workspace, project)});
     
     dialog.append(closeBtn);
-    dialog.append(createForm(project, template, dialog, workspace));
+    dialog.append(createForm(project, template, dialog, workspace, toDoID));
 
     body.append(dialog);
     dialog.showModal();
 }
 
-const createForm = (project, template, dialog, workspace) => {
+const createForm = (project, template, dialog, workspace, toDoID = null) => {
     // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
@@ -213,7 +213,7 @@ const createForm = (project, template, dialog, workspace) => {
         newInput.setAttribute("id", `${toDoProperty}`);
         newInput.setAttribute("required","");
         newInput.setAttribute("type", template[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
-        newInput.setAttribute("value", template[toDoProperty].value);
+        newInput.setAttribute("value", template[toDoProperty].value); //If the template comes from an existing note, pre-fill the form values
 
         newOption.append(newLabel, newInput);
         formProperties.append(newOption);
@@ -233,8 +233,9 @@ const createForm = (project, template, dialog, workspace) => {
             let newProject = projects.project(newToDo.title);
             project.addChild(newProject);
             removeDialog(dialog, workspace, newProject);
-        } else {
-            project.addChild(newToDo);
+        } 
+        else {
+            toDoID ? project.todos[toDoID] = newToDo : project.addChild(newToDo); // If the todo exists, edit it. Otherwise create new one
             removeDialog(dialog, workspace, project);
         }
     }

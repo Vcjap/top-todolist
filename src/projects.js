@@ -12,6 +12,7 @@ const project = (newTitle) => {
             // Use the method todos.create defined in todos.js
             addChild(newTodo) {
                 this.todos[idTodo] = todos.create(newTodo);
+                newTodo["id"] = idTodo;
                 idTodo += 1;
             },
             deleteChild(todoID) {
@@ -30,6 +31,7 @@ const workspace = (newTitle) => {
         {
             addChild(newProject) {
                 this.projects[idProject] = newProject;
+                newProject["id"] = idProject;
                 idProject += 1;
             },
             deleteChild(projectID) {
