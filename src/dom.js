@@ -174,7 +174,9 @@ const displayWorkspace = (workspace, projectToShow) => {
 
     const sidebar = displayProjectsSidebar(workspace);
     const projectView = displayProjectView(projectToShow || workspace.projects["0"], workspace);
-    
+
+    local_store.updateStorage(workspace);
+
     body.append(sidebar);
     body.append(projectView);
 }
@@ -196,7 +198,6 @@ const openDialog = (project, template, dialog, workspace, toDoID = null) => {
             toDoID ? project.todos[toDoID] = newElement : project.addChild(newElement);
             removeDialog(dialog, workspace, project);
         }
-        local_store.updateStorage(workspace);
     };
 
     dialog.append(closeBtn);
