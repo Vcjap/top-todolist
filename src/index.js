@@ -31,8 +31,8 @@ const todoExample3 = {
 }
 
 const createWorkspace = () => {
-    let storedWorkspace = store_local.rehydrateWorkspace(store_local.retrieveStorage("workspace"));
-    let workspaceToDisplay = storedWorkspace;
+    let storedWorkspace = store_local.retrieveStorage("workspace");
+    let workspaceToDisplay = {};
 
     if (!storedWorkspace) {
         let newWorkspace = projects.workspace("Jerry");
@@ -47,8 +47,10 @@ const createWorkspace = () => {
         newWorkspace.addChild(newProject2); 
 
         workspaceToDisplay = newWorkspace;
+    } else {
+        workspaceToDisplay = store_local.rehydrateWorkspace(storedWorkspace);
     }
-
+    
     dom.displayWorkspace(workspaceToDisplay, workspaceToDisplay.projects["0"]);
 
     store_local.updateStorage(workspaceToDisplay);
