@@ -1,4 +1,5 @@
 import projects from "./projects";
+import local_store from "./store";
 
 // Display project list in sidebar
 const displayProjectsSidebar = (workspace) => {
@@ -195,6 +196,7 @@ const openDialog = (project, template, dialog, workspace, toDoID = null) => {
             toDoID ? project.todos[toDoID] = newElement : project.addChild(newElement);
             removeDialog(dialog, workspace, project);
         }
+        local_store.updateStorage(workspace);
     };
 
     dialog.append(closeBtn);

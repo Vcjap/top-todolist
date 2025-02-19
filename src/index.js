@@ -31,7 +31,7 @@ const todoExample3 = {
 }
 
 const createWorkspace = () => {
-    let storedWorkspace = store_local.retrieveStorage("workspace");
+    let storedWorkspace = store_local.rehydrateWorkspace(store_local.retrieveStorage("workspace"));
     let workspaceToDisplay = storedWorkspace;
 
     if (!storedWorkspace) {
