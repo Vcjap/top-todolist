@@ -150,13 +150,12 @@ const createNewElementBtn = (project, template, textContent, workspace) => {
 }
 
 // Unite the two elements
-const displayWorkspace = (workspace, currentProject) => {
+const displayWorkspace = (workspace, projectToShow) => {
     const body = document.querySelector(".main");
     body.innerHTML = "";
 
-    let projects = workspace.projects;
     const sidebar = displayProjectsSidebar(workspace);
-    const projectView = displayProjectView(currentProject);
+    const projectView = displayProjectView(projectToShow || workspace.projects["0"], workspace);
     
     body.append(sidebar);
     body.append(projectView);
@@ -213,16 +212,14 @@ const createForm = (project, template, dialog, workspace) => {
         event.preventDefault();
         const newToDo = getNewElement(newForm);
 
-        // Horrible if/else to make sure that we use the right constructor for the objects todos or project
         if (workspace === project) { // This means we've passed the workspace as parent
             let newProject = projects.project(newToDo.title);
             project.addChild(newProject);
+            removeDialog(dialog, workspace, newProject);
+        } else {
+            project.addChild(newToDo);
+            removeDialog(dialog, workspace, project);
         }
-        else {
-        project.addChild(newToDo);
-        }
-
-        removeDialog(dialog, workspace, project);
     }
     return newForm
 }
@@ -238,11 +235,11 @@ const getNewElement = (form) => {
     return newTodo
 }
 
-const removeDialog = (dialog, workspace, currentProject) => {
+const removeDialog = (dialog, workspace, projectToShow) => {
     dialog.innerHTML = "";
     dialog.close();
     dialog.remove();
-    displayWorkspace(workspace, currentProject);
+    displayWorkspace(workspace, projectToShow);
 }
 
 export default {displayWorkspace};
