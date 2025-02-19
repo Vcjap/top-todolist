@@ -11,7 +11,8 @@ const displayProjectsSidebar = (workspace) => {
     const projectList = addProjectsToSidebar(workspace);    
     projectList.classList.add("projects_list")
 
-    const template = {title: {type : "text"}};
+    const template = {title: {type : "text", value: ""}};
+
     const newProjectBtn = createNewElementBtn(workspace, template, "New Project", workspace);
 
     sidebar.append(title, projectList, newProjectBtn);
