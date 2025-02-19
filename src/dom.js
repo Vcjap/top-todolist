@@ -78,45 +78,67 @@ const displayProjectTodos = (project, workspace) => {
 
         const deleteToDoBtn = document.createElement("button");
         deleteToDoBtn.textContent = "Delete Todo";
-        deleteToDoBtn.addEventListener("click", () => {
+        deleteToDoBtn.addEventListener("click", (event) => {
+            event.stopPropagation(); // Otherwise also the "open todo details" event would be triggered
             project.deleteChild(todo_id);
             displayWorkspace(workspace, project);
         });
 
+        const dialog = document.createElement("dialog");
+        const template = createTemplate(todo_list[todo_id]);
+        newTodo.addEventListener("click", ()=> openDialog(project, template, dialog, workspace));
+        
         newTodo.append(deleteToDoBtn);
         container.appendChild(newTodo);
     }
 
-    const template = {
-        title: {
-            type: "text"
-        },
-        due_date: {
-            type: "date"
-        },
-        priority: {
-            type: "text"
-        },
-        description: {
-            type: "text"
-        },
-        notes: {
-            type: "text"
-        },
-        completed: {
-            type: "boolean"
-        }
-    };
-
+    let template = createTemplate(); 
     const newTodoBtn = createNewElementBtn(project, template, "New Todo", workspace); 
     container.appendChild(newTodoBtn);
 
     return container
 }
 
+//TODO: Make createTemplate agnostic to project or todo
+const createTemplate = (originObject = null) => { 
+    let template = {
+        title: {
+            type: "text",
+            value: ""
+        },
+        dueDate: {
+            type: "date",
+            value: ""
+        },
+        priority: {
+            type: "text",
+            value: ""
+        },
+        description: {
+            type: "text",
+            value: ""
+        },
+        notes: {
+            type: "text",
+            value: ""
+        },
+        completed: {
+            type: "boolean",
+            value: ""
+        }
+    };
+    
+    if (!originObject) return template;
+
+    for (const key in template) {
+        template[key].value = originObject[key];
+    }
+    return template;
+}
+
 const displayTodoSummary = (todo) => {
     const container = document.createElement("div");
-
+    
     const todoTitle = todo.title;
     const todoDueDate = todo.dueDate;
 
@@ -191,7 +213,8 @@ const createForm = (project, template, dialog, workspace) => {
         newInput.setAttribute("id", `${toDoProperty}`);
         newInput.setAttribute("required","");
         newInput.setAttribute("type", template[toDoProperty].type) // I can specify it in the template, so the info is taken from there!!
-        
+        newInput.setAttribute("value", template[toDoProperty].value);
+
         newOption.append(newLabel, newInput);
         formProperties.append(newOption);
     }
