@@ -185,14 +185,25 @@ const openDialog = (project, template, dialog, workspace, toDoID = null) => {
     closeBtn.textContent = "X";
     closeBtn.addEventListener("click", () => {removeDialog(dialog, workspace, project)});
     
+    const handleSubmit = (newElement) => {
+        if (workspace === project) {
+            let newProject = projects.project(newElement.title);
+            project.addChild(newProject);
+            removeDialog(dialog, workspace, newProject);
+        } else {
+            toDoID ? project.todos[toDoID] = newElement : project.addChild(newElement);
+            removeDialog(dialog, workspace, project);
+        }
+    };
+
     dialog.append(closeBtn);
-    dialog.append(createForm(project, template, dialog, workspace, toDoID));
+    dialog.append(createForm(template, handleSubmit));
 
     body.append(dialog);
     dialog.showModal();
 }
 
-const createForm = (project, template, dialog, workspace, toDoID = null) => {
+const createForm = (template, onSubmitCallback) => {
     // Create form container and header
     const newForm = document.createElement("form");
     newForm.classList.add("newToDoForm");
@@ -227,17 +238,8 @@ const createForm = (project, template, dialog, workspace, toDoID = null) => {
     //Decide what happens when submitting the form (create a new element and remove the dialog)
     newForm.onsubmit = (event) => {
         event.preventDefault();
-        const newToDo = getNewElement(newForm);
-
-        if (workspace === project) { // This means we've passed the workspace as parent
-            let newProject = projects.project(newToDo.title);
-            project.addChild(newProject);
-            removeDialog(dialog, workspace, newProject);
-        } 
-        else {
-            toDoID ? project.todos[toDoID] = newToDo : project.addChild(newToDo); // If the todo exists, edit it. Otherwise create new one
-            removeDialog(dialog, workspace, project);
-        }
+        const newElement = getNewElement(newForm);
+        onSubmitCallback(newElement);
     }
     return newForm
 }
