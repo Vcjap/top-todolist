@@ -2,6 +2,7 @@ import "./styles.css";
 import todos from "./todos.js";
 import projects from "./projects.js";
 import dom from "./dom.js";
+import store_local from "./store.js";
 
 console.log("Hello World!");
 const todoExample1 = {
@@ -29,15 +30,29 @@ const todoExample3 = {
     completed: false,
 }
 
-let newWorkspace = projects.workspace("Jerry");
+const createWorkspace = () => {
+    let storedWorkspace = store_local.retrieveStorage("workspace");
+    let workspaceToDisplay = storedWorkspace;
 
-let newProject1 = projects.project("Casa");
-let newProject2 = projects.project("Lavoro");
+    if (!storedWorkspace) {
+        let newWorkspace = projects.workspace("Jerry");
+    
+        let newProject1 = projects.project("Casa");
+        let newProject2 = projects.project("Lavoro");
+        
+        newProject1.addChild(todoExample1);
+        newProject1.addChild(todoExample2);
+        newProject2.addChild(todoExample3);
+        newWorkspace.addChild(newProject1);
+        newWorkspace.addChild(newProject2); 
 
-newProject1.addChild(todoExample1);
-newProject1.addChild(todoExample2);
-newProject2.addChild(todoExample3);
-newWorkspace.addChild(newProject1);
-newWorkspace.addChild(newProject2);
+        workspaceToDisplay = newWorkspace;
+    }
 
-dom.displayWorkspace(newWorkspace, newWorkspace.projects["0"]);
+    dom.displayWorkspace(workspaceToDisplay, workspaceToDisplay.projects["0"]);
+
+    store_local.updateStorage(workspaceToDisplay);
+}
+
+createWorkspace();
+

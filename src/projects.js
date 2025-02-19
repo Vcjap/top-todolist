@@ -1,13 +1,12 @@
 import todos from "./todos.js";
 
-let idProject = 0;
-
 const project = (newTitle) => {
     let idTodo = 0;
     return Object.assign(
         {},
         {title: newTitle},
         {todos: {}},
+        // {lastID: 0},
         {
             // Use the method todos.create defined in todos.js
             addChild(newTodo) {
